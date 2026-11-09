@@ -1,11 +1,1 @@
-* text=auto eol=lf
-*.bat text eol=crlf
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.webp binary
-*.pdf binary
-*.3mf binary
-*.FCStd binary
-*.step text
-*.stp text
+* text=auto
