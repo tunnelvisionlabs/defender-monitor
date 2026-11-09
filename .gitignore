@@ -1,0 +1,43 @@
+# Private installation configuration, calibration, captures, and logs
+/local/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+
+# Dependencies, SDK state, and generated build/validation output
+node_modules/
+.venv/
+.venv-*/
+.cache/
+.tmp/
+build/
+managed_components/
+sdkconfig
+sdkconfig.old
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-tmp/
+coverage/
+output/
+artifacts/
+
+# CAD exports and editor backups; retain editable model sources
+/hardware/mount/exports/
+*.FCStd1
+*.FCBak
+*.stl
+*.gcode
+
+# Machine-specific tool and editor state
+.agents/
+.codex/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

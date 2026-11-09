@@ -1,0 +1,2 @@
+# Board-specific flash, PSRAM, camera, and display settings await verification.
+# The empty application currently uses ESP-IDF defaults for the ESP32-S3 target.

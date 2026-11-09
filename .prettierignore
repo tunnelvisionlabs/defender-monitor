@@ -1,0 +1,14 @@
+node_modules/
+.git/
+.cache/
+.tmp/
+.venv*/
+local/
+**/build/
+**/managed_components/
+**/sdkconfig
+**/sdkconfig.old
+output/
+artifacts/
+hardware/mount/exports/
+package-lock.json

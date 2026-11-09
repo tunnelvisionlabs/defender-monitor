@@ -1,0 +1,6 @@
+{
+  "esp_idf": "5.5.5",
+  "target": "esp32s3",
+  "board": "seeed-xiao-esp32s3-sense",
+  "display": "seeed-round-display-for-xiao"
+}
