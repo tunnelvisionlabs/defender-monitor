@@ -4,8 +4,9 @@ The implemented preview uses native `esp_lcd` with `espressif/esp_lcd_gc9a01`
 exactly 2.0.4. The dependency lock also fixes `cmake_utilities` 0.5.3. It adds
 no Arduino, LVGL, touch, storage, networking, calibration, or recognition.
 Firmware compilation, 49 host scenarios, and a five-minute combined-driver bench
-trial pass. Visible display output, combined cold startup, and panel
-measurements remain pending; transfer completion alone does not verify them.
+trial pass. The corrected build also passes combined cold-start diagnostics, and
+the owner confirms upright, unmirrored UI/camera output and correct colors with
+USB pointing up. Panel optical measurements remain pending.
 
 ## Preview behavior
 
@@ -18,11 +19,15 @@ establish recognition accuracy.
 
 The screen has an `UP` marker, `L`/`R` markers, a frame number, and source age
 at draw preparation in milliseconds. A bottom strip contains red, green, and
-blue in that order. Use these to verify orientation, mirroring, and color on the
-actual panel. The initial LCD configuration is no XY swap or mirroring, RGB
-element order, MSB-first RGB565, and inversion enabled. These are candidate
-settings until visually confirmed. Record the USB connector's direction with the
-text upright before CAD or calibration assigns a top edge.
+blue in that order, with white `R`, `G`, and `B` labels identifying the intended
+hues independently of their positions. The current LCD configuration swaps XY,
+uses no additional X/Y mirroring, BGR LCD element order, MSB-first RGB565, and
+inversion enabled. Preview sampling reflects source Y; the camera source bytes
+and coordinates remain unchanged. The owner confirmed this orientation with the
+**USB connector pointing up**, camera lettering upright and unmirrored, and each
+labeled bar and known camera-view color correct. This is the chosen screen
+reference for this profile, not an inherent top of the circular board. The
+complete assembly was rotated; the stock camera/ribbon position is retained.
 
 The preview contains camera evidence, with no interpreted Defender status.
 `WAITING`, `STALE`, and `CAMERA ERROR` views contain no source image. A failed
@@ -102,6 +107,7 @@ compilation and authorized physical trials cover different evidence.
 
 ## Bench evidence: 2026-11-09
 
+This is the initial build's baseline, before the orientation correction below.
 The supplied assembly remained on its current computer USB supply/cable, with
 the Round Display attached, both reported KE poles open, both SD slots empty,
 and no networking or hardware modification. The installed app image SHA-256 is
@@ -131,9 +137,64 @@ voltage/current margins, temperatures, or long-term/enclosed reliability. No
 physical camera/display fault was induced. Recovery and delayed-DMA ownership
 have host coverage; actual fault recovery remains unmeasured.
 
-Visible output/color/orientation, combined cold startup, and the optical
-envelope at the Defender remain open. The worksheet below supports panel work on
-USB power away from this computer.
+### Orientation correction: 2026-11-10
+
+The owner confirmed a moving camera image on the initial build. With the app's
+`UP` marker at the top, app-drawn text was reflected left to right, while
+camera-view lettering was rotated 90 degrees clockwise without another flip. The
+USB connector pointed toward the displayed `L` marker, and the bars appeared
+red/green/blue from left to right. These are observations of that initial build,
+not a final board-axis definition.
+
+The correction uses the LCD axis swap and a vertical reflection only in the
+scaled preview. That preserves the full native 320 by 240 acquisition for later
+calibration, with no extra frame buffer or mechanical camera rotation. The
+short, semi-flexible stock camera connection remains untouched; the owner is
+willing to rotate the whole assembly to choose its final orientation. Lettered
+color markers now separate color verification from geometric mirroring.
+
+The revised installed app image SHA-256 is
+`ae2ea57d8016981738025004bcbca177fb541872b5fe20791db3c6cfc61f256c`; the startup
+ELF prefix is `0db61fc5c069fdea`. It compiles, all 49 host scenarios pass, and
+write/hash verification passes. Updated corner tests cover reflected preview Y
+and unchanged source bytes. A 20.187-second USB-restart recording contains 83
+captures and 82 completed preview transfers at its last report, with zero
+reported failures, expirations, replacements, or timeouts. Free heap, PSRAM, and
+stack readings match the baseline; the maximum reported copy window is 7,519
+microseconds. This short check does not replace visual confirmation or establish
+a new five-minute measurement.
+
+The logger then observed USB disconnection/reconnection, with USB unavailable
+for 8.203 seconds, and recorded the SDK's power-on reset reason `1` without
+requesting a software reset. The same revised build passed PSRAM and
+camera/display startup, produced a different boot-session token, and resumed
+both timestamp series. The 20.016-second cold-start recording has 83 captures
+and 82 completed preview transfers at its final periodic report (15.750
+seconds), with zero reported errors, expirations, replacements, or timeouts and
+unchanged memory/stack readings. This establishes combined cold-start
+diagnostics. The owner confirmed upright, unmirrored camera lettering with USB
+pointing up, but the labeled `R` bar appeared blue and `B` appeared red.
+
+The final color correction selects BGR in the LCD controller; canvas and native
+camera bytes remain MSB-first RGB565. The installed image SHA-256 is
+`e136a05e8e695dbf92ba39ded193975188d024e2bcdce8cfc0c09d77dbb60ead`; its startup
+ELF prefix is `ba23833311677c5c`. Firmware compilation and write/hash
+verification pass. A second physical power cycle, with USB unavailable for 7.593
+seconds, again reports power-on reset reason `1`, successful PSRAM and
+camera/display initialization, and advancing source timestamps. Its
+20.063-second recording contains 83 captures/submissions and 82 completed
+previews at the final periodic report (15.735 seconds), with zero reported
+errors, expirations, replacements, or timeouts. Heap/stack measurements and the
+7,519-microsecond maximum copy window match the preceding revision.
+
+The owner confirms that the `R`/`G`/`B` labels now match their bar colors, USB
+still points up, and known colors also match in the camera view. The upright,
+unmirrored camera orientation is retained. No camera repositioning, GPIO change,
+source-frame transformation, or extra image buffer was required.
+
+The optical envelope at the Defender remains open. The worksheet below supports
+panel work on USB power away from this computer. The source resolution and
+exposure defaults remain provisional until that work supplies measurements.
 
 ## Bench acceptance procedure and remaining checks
 

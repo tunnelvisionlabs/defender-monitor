@@ -15,8 +15,10 @@ The firmware implements camera acquisition and Round Display preview for the
 recorded XIAO ESP32S3 Sense / OV3660 profile, with bounded ownership,
 acquisition provenance, source-age handling, and local USB diagnostics.
 Camera-only cold startup and five-minute camera-only and combined-driver trials
-pass on the supplied assembly. Visible display output, combined cold startup,
-orientation, image quality, and panel optics remain unverified. See
+pass on the supplied assembly. Combined cold-start diagnostics also pass after
+the orientation/color correction. The owner confirms upright, unmirrored
+UI/camera output and correct colors with USB pointing up. Panel readability,
+optics, and enclosed/full-system behavior remain unverified. See
 [preview and optical measurements](docs/preview-and-optics.md).
 
 Calibration, recognition, touch behavior, networking, MQTT publishing, and mount

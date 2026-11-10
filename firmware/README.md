@@ -29,6 +29,7 @@ products remain ignored.
 See [camera capture](../docs/camera-capture.md) and
 [preview/optics](../docs/preview-and-optics.md) for ownership, timing, targets,
 diagnostics, and physical checks. A five-minute combined-driver trial passes;
-visible output, combined cold startup, and panel optics remain pending. This is
-not deployment firmware. Compilation does not establish boot or hardware
-acceptance and does not authorize writing to any device.
+combined cold-start diagnostics also pass. The owner confirms corrected visible
+orientation and colors with USB up; panel optics remain pending. This is not
+deployment firmware. Compilation does not establish boot or hardware acceptance
+and does not authorize writing to any device.

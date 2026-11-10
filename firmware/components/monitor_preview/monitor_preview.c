@@ -104,9 +104,13 @@ esp_err_t monitor_preview_submit(const monitor_camera_frame_t *frame)
     portEXIT_CRITICAL(&s_lock);
     if (slot == NULL) return ESP_ERR_INVALID_STATE;
 
-    /* Copy only the preview. Capture resolution and its leased bytes are unchanged. */
+    /* The stock sensor and LCD have different handedness. Reflect preview Y
+     * alongside the LCD axis swap; rotate the complete assembly, not its short
+     * camera ribbon. Source coordinates/bytes stay native for later calibration.
+     */
     for (unsigned y = 0; y < MONITOR_PREVIEW_HEIGHT; ++y) {
-        const size_t source_row = ((2 * y + 1) * frame->height /
+        const unsigned source_y = MONITOR_PREVIEW_HEIGHT - 1 - y;
+        const size_t source_row = ((2 * source_y + 1) * frame->height /
                                    (2 * MONITOR_PREVIEW_HEIGHT)) * frame->width;
         for (unsigned x = 0; x < MONITOR_PREVIEW_WIDTH; ++x) {
             const size_t source = 2 * (source_row + (2 * x + 1) * frame->width /
@@ -182,9 +186,13 @@ static void compose(preview_slot_t *slot, monitor_preview_state_t state, int64_t
     } else {
         preview_text(s_canvas, 63, 116, "NO CURRENT IMAGE", 0xf800);
     }
-    preview_fill(s_canvas, 90, 223, 20, 3, 0xf800);
-    preview_fill(s_canvas, 110, 223, 20, 3, 0x07e0);
-    preview_fill(s_canvas, 130, 223, 20, 3, 0x001f);
+    /* Labels distinguish color order from a reflected display's bar positions. */
+    preview_text(s_canvas, 97, 219, "R", 0xffff);
+    preview_text(s_canvas, 117, 219, "G", 0xffff);
+    preview_text(s_canvas, 137, 219, "B", 0xffff);
+    preview_fill(s_canvas, 90, 229, 20, 3, 0xf800);
+    preview_fill(s_canvas, 110, 229, 20, 3, 0x07e0);
+    preview_fill(s_canvas, 130, 229, 20, 3, 0x001f);
 }
 
 void monitor_preview_step(void)

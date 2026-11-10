@@ -51,7 +51,9 @@ esp_err_t monitor_preview_init(void);
 /**
  * Called by the single camera-owner task while its frame lease is valid.
  * Nearest-neighbor scale of the complete 320x240 source preserves aspect ratio
- * and raw MSB-first RGB565 bytes. No source pointer survives this call. Release
+ * and raw MSB-first RGB565 bytes. Preview Y is reflected to match the stock
+ * camera/LCD orientation; source coordinates and bytes remain native. No source
+ * pointer survives this call. Release
  * the camera lease immediately afterward. There is no wait for LCD/DMA or a
  * queue: the latest pending preview replaces an older one. Only bookkeeping
  * takes a short critical section; image copying occurs outside it.
