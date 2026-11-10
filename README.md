@@ -17,10 +17,10 @@ acquisition provenance, source-age handling, and local USB diagnostics.
 Camera-only cold startup and five-minute camera-only and combined-driver trials
 pass on the supplied assembly. Combined cold-start diagnostics also pass after
 the orientation/color correction. The owner confirms upright, unmirrored
-UI/camera output and correct colors with USB pointing up. The current build
-targets USB down to keep the shroud clear of the buttons; its board startup
-passes, and visual confirmation is pending. The proposed lens-to-panel target is
-39–42 mm. Further optical and enclosed/full-system checks remain open, and
+UI/camera output and correct colors with USB pointing down on the current build.
+The proposed lens-to-panel target is 39–42 mm. Clean panel behavior is an
+owner-accepted design assumption based on desk testing; the initial shielded
+trial has not been performed. Final optical/enclosed checks remain planned, and
 Windows policy currently blocks the revised preview host tests. See
 [preview and optical measurements](docs/preview-and-optics.md).
 

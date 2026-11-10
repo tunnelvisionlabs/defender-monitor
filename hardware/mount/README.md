@@ -23,18 +23,22 @@ the shroud. An opaque enclosure alone does not prove stable image quality.
 
 ## Current design inputs
 
-The owner requests **USB down** so a shroud around the indicator region can
-leave all Defender buttons exposed. Prefer this simpler footprint over adding
-button mechanisms; captive manual extensions remain a fallback only if the
-measured design must cover a button. Physical fit and full light exclusion still
-need verification.
+The owner verifies the **USB-down** preview and requests this orientation so a
+shroud around the indicator region can leave all Defender buttons exposed.
+Prefer this simpler footprint over adding button mechanisms; captive manual
+extensions remain a fallback only if the measured design must cover a button.
+Physical fit and full light exclusion still need verification.
 
 The proposed lens-to-panel target is **39–42 mm**. The owner reports comfortable
 full-frame coverage of the three-character display and both LEDs, allowing the
 verification display to retain the complete image. This is a working placement
-target, not a measured manufacturing/seating tolerance. Focus, shielded-light
-stability, numeric field of view, actual cable clearance, and panel mounting
-datums remain to be established. See
+target, not a measured manufacturing/seating tolerance. The owner accepts clean
+panel behavior provisionally, based on clean desk testing, and defers the
+initial shielded 30-second trial. Prototype/carrier design may proceed on that
+basis. Record the assumption and revisit it if artifacts appear or during the
+planned printed-shroud trials. Numeric field of view, actual cable clearance,
+panel mounting datums, and final enclosed optical/thermal behavior still need
+their corresponding measurements. See
 [preview and optics](../../docs/preview-and-optics.md) for orientation changes,
 trial evidence, and remaining checks.
 

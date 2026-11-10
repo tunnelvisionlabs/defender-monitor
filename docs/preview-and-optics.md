@@ -5,10 +5,12 @@ exactly 2.0.4. The dependency lock also fixes `cmake_utilities` 0.5.3. It adds
 no Arduino, LVGL, touch, storage, networking, calibration, or recognition.
 Earlier revisions passed 49 host scenarios, a five-minute combined-driver trial,
 cold startup, and owner verification of orientation/colors with USB up. The
-current build targets USB down so the shroud can leave all buttons exposed. It
-compiles and passes USB-startup diagnostics; visual confirmation and further
-optical checks remain pending. Windows Application Control currently prevents
-the revised preview host tests from executing; the camera host scenarios pass.
+current USB-down build compiles, passes USB-startup diagnostics, and has
+owner-confirmed upright, unmirrored output and correct colors. The owner accepts
+clean panel behavior as a provisional design assumption based on clean desk
+testing; the initial shielded 30-second check has not been performed. Windows
+Application Control currently prevents the revised preview host tests from
+executing; the camera host scenarios pass.
 
 ## Preview behavior
 
@@ -25,11 +27,11 @@ blue in that order, with white `R`, `G`, and `B` labels identifying the intended
 hues independently of their positions. The current LCD configuration swaps XY,
 mirrors both LCD axes, uses BGR LCD element order, MSB-first RGB565, and
 inversion enabled. Preview sampling reflects source X; the camera source bytes
-and coordinates remain unchanged. The target is **USB pointing down** with UI
-and camera lettering upright and unmirrored. This rotates the previous verified
-USB-up presentation by 180 degrees and still needs visual confirmation. The
-stock camera/ribbon position is retained; rotate the complete assembly. The
-circular board has no inherent top.
+and coordinates remain unchanged. The owner confirms **USB pointing down** with
+UI and camera lettering upright and unmirrored and correct labeled bar colors.
+This rotates the earlier USB-up presentation by 180 degrees. The stock
+camera/ribbon position is retained; rotate the complete assembly. The circular
+board has no inherent top.
 
 The preview contains camera evidence, with no interpreted Defender status.
 `WAITING`, `STALE`, and `CAMERA ERROR` views contain no source image. A failed
@@ -200,7 +202,8 @@ The owner requested USB down so a shroud can cover the indicator region without
 covering any Defender buttons. The LCD now mirrors both axes after its XY swap,
 and preview sampling changes from Y reflection to X reflection. Native capture
 coordinates, source resolution, color order, and buffer bounds stay unchanged.
-Visual confirmation of the new presentation remains pending.
+The owner confirms that the resulting USB-down view is upright, unmirrored, and
+correctly colored.
 
 The owner reports forgiving lens-to-indicator placement and proposes **39–42 mm
 lens to panel** as the design target. The complete three-character display and
@@ -226,10 +229,15 @@ scenarios are unverified for this revision, not failed assertions or passes. The
 earlier 49-scenario result belongs to the preceding orientation. No signing
 policy or test behavior was changed to bypass the block.
 
-The optical envelope remains open for focus, lighting/shield, refresh/flicker,
-readability, and power/thermal observations. The source resolution and exposure
-defaults remain provisional. The worksheet below supports those checks on USB
-power away from this computer.
+The owner reports clean desk testing and directs that panel behavior be assumed
+clean until contrary evidence appears. Accept that assumption for continued
+prototype/carrier work at the 39–42 mm target; do not wait for a separate
+initial shielded 30-second trial. That trial was not performed, and no new
+panel-state, numeric field-of-view, exposure-time, temperature, or electrical
+measurements are implied. Source resolution and exposure defaults remain
+provisional. Revisit the assumption if artifacts appear and during the already
+planned printed-shroud and integrated optical trials. The worksheet below
+remains available for those observations.
 
 ## Bench acceptance procedure and remaining checks
 
