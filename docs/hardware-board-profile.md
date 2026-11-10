@@ -9,18 +9,18 @@ GPIO configuration, or memory setting is implemented by this document.
 
 ## Identified assembly
 
-| Item                       | Evidence                                                                                           | Remaining confirmation                                                                        |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product] | Exact base-board revision is not visible                                                      |
-| Camera                     | Owner reads `OV3660` on the supplied camera                                                        | Read the sensor identity during camera bring-up                                               |
-| Connections                | Owner plugged the XIAO into the Round Display; otherwise supplied hardware is unchanged            | Record orientation and service clearances on the actual stack                                 |
-| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown              |
-| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified         | Meaning of the strip marking is unknown; do not treat it as a PCB revision                    |
-| Power                      | Currently connected to the development computer with a regular USB-C cable; no battery required    | USB data operation and available power are untested; standalone supply remains to be selected |
-| Memory                     | Vendor specification is 8 MB flash and 8 MB PSRAM [product]                                        | Confirm flash capacity, PSRAM operation, and usable memory at bring-up                        |
-| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen         | Measurement tool/uncertainty and connector clearances are not recorded                        |
-| Antenna                    | Owner has the supplied antenna; it is not connected                                                | Establish attachment, routing, and clearance before Wi-Fi trials                              |
-| microSD slots              | Owner confirms both slots are empty                                                                | Card-interface wiring and pull-ups remain connected                                           |
+| Item                       | Evidence                                                                                                           | Remaining confirmation                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product]                 | Exact base-board revision is not visible                                                      |
+| Camera                     | Owner reads `OV3660` on the supplied camera                                                                        | Read the sensor identity during camera bring-up                                               |
+| Connections                | Owner reports the USB connector points outward toward the screen's edge; the supplied stack is otherwise unchanged | Screen-relative rotation is undetermined; plug and button clearances remain unmeasured        |
+| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown              |
+| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified                         | Meaning of the strip marking is unknown; do not treat it as a PCB revision                    |
+| Power                      | Currently connected to the development computer with a regular USB-C cable; no battery required                    | USB data operation and available power are untested; standalone supply remains to be selected |
+| Memory                     | Vendor specification is 8 MB flash and 8 MB PSRAM [product]                                                        | Confirm flash capacity, PSRAM operation, and usable memory at bring-up                        |
+| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen                         | Measurement tool/uncertainty and connector clearances are not recorded                        |
+| Antenna                    | Owner has the supplied antenna; it is not connected                                                                | Establish attachment, routing, and clearance before Wi-Fi trials                              |
+| microSD slots              | Owner confirms both slots are empty                                                                                | Card-interface wiring and pull-ups remain connected                                           |
 
 The SKU alone does not identify a PCB or camera revision. Seeed's [2025 camera
 change notice][camera-change] covers the same SKU, and the current [series
@@ -172,27 +172,45 @@ measurement method and uncertainty were not specified, so this is an initial
 inventory envelope, not a CAD fit tolerance. The owner reports that the stack
 fits behind the screen's width/height envelope.
 
+The USB connector points outward toward the screen's edge. No displayed image
+has established a logical top/bottom yet; use the connector direction as the
+physical reference and record image rotation during display bring-up. The owner
+expects that selecting a compact cable can permit a tight fit, but no specific
+plug projection or minimum clearance has been measured. Select and measure the
+actual cable before enclosure geometry relies on it.
+
+BOOT/RESET reachability on the assembled stack is unknown. The owner has not
+needed those controls during ordinary use; this does not establish that a
+recovery procedure is operable. Verify the actual service path during recovery
+and shroud work, recording any necessary removal and reassembly. Routine OTA
+updates retain their requirement to work without disassembly.
+
 Published sizes are reference envelopes only: the [series guide][series] lists
 21 by 17.8 mm for the base and 15 mm height with the Sense expansion; the
 [display guide][round-guide] lists 39 by 39 mm for its board. Actual header,
 lens, connector, and cable protrusions must be measured before CAD uses them.
 
-| Evidence needed             | How to record it                                                                                                                                  | Completion boundary                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Complete stack envelope     | Owner reports 43 by 43 by 28.7 mm using the screen-face datum; record method/uncertainty when fit precision is needed                             | Initial envelope recorded; detailed fit measurements belong to mount design       |
-| Connectors and access       | USB plug projection/bend space, camera flex clearance, BOOT/RESET access, board orientation, and any header interference                          | Record actual clearances; panel attachment geometry belongs to mount design       |
-| Antenna                     | Supplied antenna available but not connected; record its eventual attachment, cable route, and clearance                                          | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                  |
-| Switches and cards          | Both SD slots empty; preserve the reported open KE setting and distinguish it from the separate power switch                                      | Initial card/switch inventory recorded; circuit matching remains conditional      |
-| Runtime identity and memory | Sensor ID, flash capacity, PSRAM initialization, and usable memory with drivers                                                                   | Camera bring-up; unknown values do not require new firmware in this investigation |
-| Power and temperature       | Record supply/cable, ambient conditions, measurement locations, startup/capture/display load, voltage/brownout behavior, current, and temperature | Measured bring-up results first; Wi-Fi/OTA and enclosed full-load trials later    |
+| Evidence needed             | How to record it                                                                                                                                  | Completion boundary                                                                                                                                                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Complete stack envelope     | Owner reports 43 by 43 by 28.7 mm using the screen-face datum; record method/uncertainty when fit precision is needed                             | Initial envelope recorded; detailed fit measurements belong to mount design                                                                                                                                                    |
+| Display orientation         | USB connector points toward the perimeter; logical top/bottom is not established before an image is rendered                                      | [Display bring-up](https://github.com/tunnelvisionlabs/defender-monitor/issues/13) records image rotation relative to that physical datum                                                                                      |
+| Cable fit and clearances    | A compact cable is a proposed option; plug projection, bend space, and insertion/removal clearance are unmeasured                                 | [Carrier design](https://github.com/tunnelvisionlabs/defender-monitor/issues/20) selects/measures the cable; [shroud work](https://github.com/tunnelvisionlabs/defender-monitor/issues/21) verifies the installed service path |
+| Recovery access             | BOOT/RESET reachability is unknown; no recovery trial has been performed                                                                          | [Recovery validation](https://github.com/tunnelvisionlabs/defender-monitor/issues/16) establishes the procedure, including any removals; shroud work preserves that access                                                     |
+| Antenna                     | Supplied antenna available but not connected; record its eventual attachment, cable route, and clearance                                          | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                                                                                                                                                               |
+| Switches and cards          | Both SD slots empty; preserve the reported open KE setting and distinguish it from the separate power switch                                      | Initial card/switch inventory recorded; circuit matching remains conditional                                                                                                                                                   |
+| Runtime identity and memory | Sensor ID, flash capacity, PSRAM initialization, and usable memory with drivers                                                                   | Camera bring-up; unknown values do not require new firmware in this investigation                                                                                                                                              |
+| Power and temperature       | Record supply/cable, ambient conditions, measurement locations, startup/capture/display load, voltage/brownout behavior, current, and temperature | Measured bring-up results first; Wi-Fi/OTA and enclosed full-load trials later                                                                                                                                                 |
 
 Only the owner's assembly-envelope measurement is recorded. No electrical
 measurements, thermal trials, camera captures, or successful boots are claimed.
-Keep this investigation open until the remaining connector-orientation and
-service-clearance inventory is recorded. Antenna availability and the bench
-power connection are now recorded; final antenna routing and standalone supply
-selection remain deployment details. The runtime items above belong to their
-implementation steps and must remain explicitly unverified until tested.
+The board-identification and pin-allocation investigation records the available
+hardware facts and the outstanding checks above. Screen rotation, cable-specific
+fit, and recovery operability belong to their existing implementation and
+validation steps; they do not require further owner measurements before native
+bring-up begins. Antenna routing and standalone supply selection remain
+deployment details. Unknown PCB revisions, runtime identities, clearances, and
+physical behavior remain explicitly unverified until their corresponding checks
+are performed.
 
 ## Reference revisions
 
