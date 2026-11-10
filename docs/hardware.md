@@ -8,6 +8,11 @@ its camera expansion board, and the Seeed Studio Round Display for XIAO. Record
 the actual unit, control-panel revision, board revisions, and camera sensor
 before selecting drivers or drawing mount geometry.
 
+The [board profile and pin allocation](hardware-board-profile.md) records the
+current investigation of the supplied assembly. It separates owner-reported
+markings, vendor circuit references, and details still requiring measurement or
+runtime confirmation.
+
 Seeed documents camera connections separately from the exposed XIAO pins in its
 [XIAO ESP32-S3 getting-started guide](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/)
 and
@@ -16,10 +21,11 @@ Use those references and the matching schematics when building a complete pin
 allocation; do not infer ESP-IDF GPIO numbers from Arduino `D` labels.
 
 The Round Display is documented as a 240 × 240 touch display on a 39 mm × 39 mm
-board, with hardware revisions that change backlight/battery pin selection.
+board. Its v1.1 schematic adds a KE switch that disconnects battery sensing on
+D0 and backlight control on D6; it does not swap those signals between pins.
 These are vendor specifications, not measurements of the owner's assembly. See
-the
-[Round Display guide](https://wiki.seeedstudio.com/get_start_round_display/).
+the [Round Display guide](https://wiki.seeedstudio.com/get_start_round_display/)
+and the circuit references in the board profile.
 
 ## Combined-board caveat
 
