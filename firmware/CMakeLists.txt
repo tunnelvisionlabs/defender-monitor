@@ -21,7 +21,7 @@ if(NOT IDF_TARGET STREQUAL monitor_target)
     message(FATAL_ERROR "Use target ${monitor_target}; found ${IDF_TARGET}.")
 endif()
 
-# Compile the application and its required SDK components, without adding drivers.
+# Compile application components and their declared, locked dependencies.
 set(COMPONENTS main)
 set(PROJECT_VER "0.0.0")
 include("$ENV{IDF_PATH}/tools/cmake/project.cmake")

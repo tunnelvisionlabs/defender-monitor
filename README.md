@@ -11,10 +11,15 @@ observations. The owner supplies the Defender and Home Assistant installation.
 
 ## Current status
 
-This repository contains development foundations. The ESP-IDF application entry
-point is intentionally empty. Camera capture, calibration, recognition, display
-and touch behavior, networking, MQTT publishing, and mount geometry are not
-implemented. There is no installable Home Assistant custom integration.
+The firmware implements camera-only bring-up for the recorded XIAO ESP32S3 Sense
+/ OV3660 profile: bounded frame ownership, source acquisition provenance, and
+local USB startup/progress diagnostics. It has firmware compilation and host
+SDK-boundary coverage; physical capture and image quality are not yet verified.
+
+Calibration, recognition, display preview and touch behavior, networking, MQTT
+publishing, and mount geometry are not implemented. There is no installable Home
+Assistant custom integration. See [camera capture](docs/camera-capture.md) for
+the implemented contract, bring-up targets, and remaining hardware checks.
 
 The initial Home Assistant connection will use MQTT discovery through Home
 Assistant's existing MQTT integration. A broker is an additional deployment
@@ -29,14 +34,14 @@ describe what the panel shows; they do not independently measure water quality.
 
 | Path                 | Purpose                                                                              |
 | -------------------- | ------------------------------------------------------------------------------------ |
-| `firmware/`          | Minimal direct ESP-IDF application and future device components                      |
+| `firmware/`          | Direct ESP-IDF camera bring-up application and components                            |
 | `integrations/mqtt/` | MQTT and Home Assistant discovery design                                             |
 | `hardware/mount/`    | Mount and shroud requirements; future editable CAD sources                           |
-| `tests/`             | Test organization and fixture policy; no feature tests yet                           |
+| `tests/`             | Camera SDK-boundary host tests and fixture policy                                    |
 | `docs/`              | Architecture, hardware investigation, development, and roadmap                       |
 | `local/`             | Ignored private configuration, calibration, images, and evidence; create when needed |
 | `toolchain.json`     | Firmware SDK and target selection                                                    |
-| `.github/workflows/` | Formatting checks and compilation of the empty firmware                              |
+| `.github/workflows/` | Formatting, firmware compilation, and camera host tests                              |
 
 ## Development
 
@@ -49,8 +54,8 @@ npm ci
 npm run check
 ```
 
-In a shell with the pinned ESP-IDF environment activated, compile the scaffold
-from the repository root:
+In a shell with the pinned ESP-IDF environment activated, compile the firmware
+from the repository root on a fresh configuration:
 
 ```powershell
 idf.py -C firmware build
@@ -58,7 +63,8 @@ idf.py -C firmware build
 
 Compilation does not flash a device. No setup or validation command connects to
 the household installation. Firmware builds require a separately installed SDK;
-see [toolchain setup](docs/development.md#firmware-toolchain).
+see [toolchain setup](docs/development.md#firmware-toolchain), including the
+configuration refresh required for an existing scaffold build.
 
 ## Project notes
 

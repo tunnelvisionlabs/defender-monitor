@@ -1,4 +1,4 @@
-name: Verify foundations
+name: Verify
 
 on:
   pull_request:
@@ -66,7 +66,7 @@ jobs:
           PY
 
   firmware:
-    name: Empty ESP32-S3 application
+    name: ESP32-S3 camera firmware and host tests
     needs: toolchain
     runs-on: ubuntu-24.04
     container:
@@ -77,8 +77,15 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - name: Compile scaffold without device access
+      - name: Compile firmware without device access
         shell: bash
         run: |
           . "$IDF_PATH/export.sh"
           idf.py -C firmware build
+      - name: Run camera SDK-boundary tests on the host
+        shell: bash
+        run: |
+          . "$IDF_PATH/export.sh"
+          cmake -S tests/host -B .cache/host-tests -G Ninja
+          cmake --build .cache/host-tests
+          ctest --test-dir .cache/host-tests --output-on-failure

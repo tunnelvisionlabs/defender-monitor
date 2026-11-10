@@ -1,9 +1,10 @@
 # Firmware
 
-This is a direct ESP-IDF project for the ESP32-S3. `main/app_main.c` contains an
-empty entry point so the SDK/target can be compiled before device features are
-introduced. It does not initialize camera, display, touch, Wi-Fi, MQTT, private
-configuration, or calibration.
+This is a direct ESP-IDF project for the ESP32-S3. `main/app_main.c` composes
+the camera-only bring-up loop and local startup/progress reporting. The
+`monitor_camera` component initializes the recorded OV3660 wiring and exposes
+bounded, source-timestamped frame leases. No display, touch, Wi-Fi, MQTT,
+private configuration, or calibration is initialized.
 
 Use the SDK pin in `../toolchain.json` and an activated official SDK
 environment:
@@ -14,13 +15,16 @@ idf.py -C firmware build
 
 Run that command from the repository root. See
 [development](../docs/development.md#firmware-toolchain) for prerequisites and
-generated-file handling. `sdkconfig.defaults` intentionally leaves
-board-specific flash, PSRAM, and peripheral configuration undecided.
+generated-file handling and refreshing an existing scaffold configuration.
+`sdkconfig.defaults` selects the candidate 8 MB flash, octal PSRAM, and native
+USB console profile. Physical acceptance remains pending.
 
 Add focused native components under `components/` with their first consumers,
 keeping `main/` for composition. Pin external components and retain their
 dependency lockfile when introduced. The SDK's generated dependencies and build
 products remain ignored.
 
-This scaffold is not deployment firmware. Compilation does not establish boot or
-hardware acceptance and does not authorize writing to any device.
+See [camera capture](../docs/camera-capture.md) for ownership, timing, targets,
+diagnostics, and the physical checklist. This is not deployment firmware.
+Compilation does not establish boot or hardware acceptance and does not
+authorize writing to any device.

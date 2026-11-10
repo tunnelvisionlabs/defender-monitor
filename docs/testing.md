@@ -6,10 +6,14 @@ failure without reconstructing private implementation details.
 
 ## Current checks
 
-`npm run check` verifies supported file formatting. `idf.py -C firmware build`
-compiles and links the empty firmware application. CI defines both checks;
-neither is a feature test or physical acceptance. No test framework, capture
-corpus, live-device harness, or recognition benchmark is installed yet.
+`npm run check` verifies supported file formatting. A fresh
+`idf.py -C firmware build` compiles and links the camera application; existing
+scaffold configurations need the refresh described in
+[development](development.md). The [host camera suite](../tests/README.md)
+executes production capture code with SDK-boundary fakes and the pinned driver's
+real public headers. CI defines compilation and host execution separately. None
+establishes physical capture, image quality, or recognition accuracy. There is
+no panel corpus, live-device harness, or recognition benchmark yet.
 
 Documentation-only work needs review and applicable formatting/link checks,
 without tests that assert prose or placeholder file existence. Add test

@@ -1,2 +1,10 @@
-# Board-specific flash, PSRAM, camera, and display settings await verification.
-# The empty application currently uses ESP-IDF defaults for the ESP32-S3 target.
+# Candidate XIAO ESP32S3 Sense / ESP32-S3R8 profile; physical acceptance pending.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+CONFIG_SPIRAM_MEMTEST=y
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=6144
+CONFIG_OV3660_SUPPORT=y

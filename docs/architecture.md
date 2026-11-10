@@ -17,9 +17,11 @@ ESP32: capture -> calibrated interpretation -> observation
                                 Defender device and entities
 ```
 
-This describes the intended system. Today, `firmware/main/app_main.c` is an
-empty entry point; the remaining boxes have no implementation in this
-repository.
+This describes the intended system. Today, `monitor_camera` implements bounded
+raw acquisition and provenance, consumed by the startup/progress loop composed
+in `firmware/main/app_main.c`. The SDK owns one frame buffer; the application
+borrows and releases it explicitly. Interpretation, calibration, display, and
+transport remain unimplemented. See [capture behavior](camera-capture.md).
 
 ## Responsibilities
 
