@@ -104,16 +104,16 @@ esp_err_t monitor_preview_submit(const monitor_camera_frame_t *frame)
     portEXIT_CRITICAL(&s_lock);
     if (slot == NULL) return ESP_ERR_INVALID_STATE;
 
-    /* The stock sensor and LCD have different handedness. Reflect preview Y
-     * alongside the LCD axis swap; rotate the complete assembly, not its short
-     * camera ribbon. Source coordinates/bytes stay native for later calibration.
+    /* Reflect preview X for the USB-down LCD orientation. This is the prior
+     * USB-up Y reflection rotated 180 degrees with the complete assembly,
+     * preserving the stock camera position and native calibration coordinates.
      */
     for (unsigned y = 0; y < MONITOR_PREVIEW_HEIGHT; ++y) {
-        const unsigned source_y = MONITOR_PREVIEW_HEIGHT - 1 - y;
-        const size_t source_row = ((2 * source_y + 1) * frame->height /
+        const size_t source_row = ((2 * y + 1) * frame->height /
                                    (2 * MONITOR_PREVIEW_HEIGHT)) * frame->width;
         for (unsigned x = 0; x < MONITOR_PREVIEW_WIDTH; ++x) {
-            const size_t source = 2 * (source_row + (2 * x + 1) * frame->width /
+            const unsigned source_x = MONITOR_PREVIEW_WIDTH - 1 - x;
+            const size_t source = 2 * (source_row + (2 * source_x + 1) * frame->width /
                                       (2 * MONITOR_PREVIEW_WIDTH));
             const size_t destination = 2 * (y * MONITOR_PREVIEW_WIDTH + x);
             slot->pixels[destination] = frame->data[source];

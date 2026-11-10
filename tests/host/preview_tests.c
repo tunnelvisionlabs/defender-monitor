@@ -83,11 +83,11 @@ int main(int argc, char **argv)
         source_pixel(319, 239, 0xdef0);
         submit();
         monitor_preview_step();
-        /* The display correction reflects preview Y, while source stays native. */
-        CHECK(fake_preview_pixel(24, 48) == 0x9abc);
-        CHECK(fake_preview_pixel(215, 48) == 0xdef0);
-        CHECK(fake_preview_pixel(24, 191) == 0x1234);
-        CHECK(fake_preview_pixel(215, 191) == 0x5678);
+        /* USB-down presentation reflects preview X, while source stays native. */
+        CHECK(fake_preview_pixel(24, 48) == 0x5678);
+        CHECK(fake_preview_pixel(215, 48) == 0x1234);
+        CHECK(fake_preview_pixel(24, 191) == 0xdef0);
+        CHECK(fake_preview_pixel(215, 191) == 0x9abc);
         CHECK(source[0] == 0x12 && source[1] == 0x34);
         CHECK(fake_preview_pixel(91, 229) == 0xf800);
         CHECK(fake_preview_pixel(111, 229) == 0x07e0);
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
         CHECK(status().draw_timeouts == 1 && status().transfer_pending);
         CHECK(fake_preview.allocation_calls == 2 && fake_preview.draws == 1);
         complete();
-        CHECK(fake_preview_pixel(24, 191) == 201);
+        CHECK(fake_preview_pixel(215, 48) == 201);
         CHECK(fake_preview.draws == 2);
         complete();
         CHECK(status().last_rendered_sequence == 201 && status().display_error == ESP_OK);

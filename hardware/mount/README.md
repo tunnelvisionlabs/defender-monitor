@@ -10,15 +10,33 @@ development exports in ignored `exports/`.
 
 Hold the complete XIAO ESP32S3 Sense, camera, and Round Display assembly at a
 known location and orientation over the Defender panel. Provide a full shroud
-that excludes external light, including seams and cable openings. Removal and
-reinstallation should return to a repeatable position or explicitly require
-recalibration.
+that excludes external light, including seams and cable openings. Tool-free
+removal and reinstallation must return the camera to a repeatable position
+without requiring recalibration. Geometry changes still require calibration
+review.
 
 Keep the assembly non-intrusive and serviceable: retain access to RO controls
 and service points through a removable design, avoid permanent RO modifications,
 provide cable strain relief, and preserve USB/recovery access. Account for the
 display's usability, antenna clearance, heat, moisture, and reflections inside
 the shroud. An opaque enclosure alone does not prove stable image quality.
+
+## Current design inputs
+
+The owner requests **USB down** so a shroud around the indicator region can
+leave all Defender buttons exposed. Prefer this simpler footprint over adding
+button mechanisms; captive manual extensions remain a fallback only if the
+measured design must cover a button. Physical fit and full light exclusion still
+need verification.
+
+The proposed lens-to-panel target is **39–42 mm**. The owner reports comfortable
+full-frame coverage of the three-character display and both LEDs, allowing the
+verification display to retain the complete image. This is a working placement
+target, not a measured manufacturing/seating tolerance. Focus, shielded-light
+stability, numeric field of view, actual cable clearance, and panel mounting
+datums remain to be established. See
+[preview and optics](../../docs/preview-and-optics.md) for orientation changes,
+trial evidence, and remaining checks.
 
 ## Measurements before modeling
 

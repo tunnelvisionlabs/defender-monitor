@@ -3,10 +3,12 @@
 The implemented preview uses native `esp_lcd` with `espressif/esp_lcd_gc9a01`
 exactly 2.0.4. The dependency lock also fixes `cmake_utilities` 0.5.3. It adds
 no Arduino, LVGL, touch, storage, networking, calibration, or recognition.
-Firmware compilation, 49 host scenarios, and a five-minute combined-driver bench
-trial pass. The corrected build also passes combined cold-start diagnostics, and
-the owner confirms upright, unmirrored UI/camera output and correct colors with
-USB pointing up. Panel optical measurements remain pending.
+Earlier revisions passed 49 host scenarios, a five-minute combined-driver trial,
+cold startup, and owner verification of orientation/colors with USB up. The
+current build targets USB down so the shroud can leave all buttons exposed. It
+compiles and passes USB-startup diagnostics; visual confirmation and further
+optical checks remain pending. Windows Application Control currently prevents
+the revised preview host tests from executing; the camera host scenarios pass.
 
 ## Preview behavior
 
@@ -21,13 +23,13 @@ The screen has an `UP` marker, `L`/`R` markers, a frame number, and source age
 at draw preparation in milliseconds. A bottom strip contains red, green, and
 blue in that order, with white `R`, `G`, and `B` labels identifying the intended
 hues independently of their positions. The current LCD configuration swaps XY,
-uses no additional X/Y mirroring, BGR LCD element order, MSB-first RGB565, and
-inversion enabled. Preview sampling reflects source Y; the camera source bytes
-and coordinates remain unchanged. The owner confirmed this orientation with the
-**USB connector pointing up**, camera lettering upright and unmirrored, and each
-labeled bar and known camera-view color correct. This is the chosen screen
-reference for this profile, not an inherent top of the circular board. The
-complete assembly was rotated; the stock camera/ribbon position is retained.
+mirrors both LCD axes, uses BGR LCD element order, MSB-first RGB565, and
+inversion enabled. Preview sampling reflects source X; the camera source bytes
+and coordinates remain unchanged. The target is **USB pointing down** with UI
+and camera lettering upright and unmirrored. This rotates the previous verified
+USB-up presentation by 180 degrees and still needs visual confirmation. The
+stock camera/ribbon position is retained; rotate the complete assembly. The
+circular board has no inherent top.
 
 The preview contains camera evidence, with no interpreted Defender status.
 `WAITING`, `STALE`, and `CAMERA ERROR` views contain no source image. A failed
@@ -192,9 +194,42 @@ still points up, and known colors also match in the camera view. The upright,
 unmirrored camera orientation is retained. No camera repositioning, GPIO change,
 source-frame transformation, or extra image buffer was required.
 
-The optical envelope at the Defender remains open. The worksheet below supports
-panel work on USB power away from this computer. The source resolution and
-exposure defaults remain provisional until that work supplies measurements.
+### USB-down layout and initial panel observations: 2026-11-10
+
+The owner requested USB down so a shroud can cover the indicator region without
+covering any Defender buttons. The LCD now mirrors both axes after its XY swap,
+and preview sampling changes from Y reflection to X reflection. Native capture
+coordinates, source resolution, color order, and buffer bounds stay unchanged.
+Visual confirmation of the new presentation remains pending.
+
+The owner reports forgiving lens-to-indicator placement and proposes **39–42 mm
+lens to panel** as the design target. The complete three-character display and
+both LEDs fit comfortably in the field of view. Prefer the complete uncropped
+image for the later verification/evidence display, with concise interpretation
+labels; recognition may still use calibrated source regions. This is an initial
+owner-reported coverage result and a proposed placement range, not a measured
+focus envelope, manufacturing tolerance, or numeric field-of-view measurement.
+
+The installed USB-down image SHA-256 is
+`f4d7d4f1fe28d2e87a37a0903c5b6ae6f297a1eb3f90db9ffb5081438ac176f6`; its startup
+ELF prefix is `ff9f21ba6fb0ebda`. ESP-IDF compilation and write/hash
+verification pass. A 20.032-second USB-restart recording has 83 captures and 82
+completed preview transfers at its last report (15.672 seconds), with zero
+reported errors, expirations, replacements, or timeouts. Free heap/PSRAM and
+stack readings match the preceding revisions. Its maximum copy window is 8,451
+microseconds; sampled camera source age is 98,514 microseconds.
+
+The updated host suite compiled, and 28 camera scenarios passed. All 21 preview
+scenarios could not start because Windows Application Control rejected the newly
+linked executable; Code Integrity events confirmed the policy block. These
+scenarios are unverified for this revision, not failed assertions or passes. The
+earlier 49-scenario result belongs to the preceding orientation. No signing
+policy or test behavior was changed to bypass the block.
+
+The optical envelope remains open for focus, lighting/shield, refresh/flicker,
+readability, and power/thermal observations. The source resolution and exposure
+defaults remain provisional. The worksheet below supports those checks on USB
+power away from this computer.
 
 ## Bench acceptance procedure and remaining checks
 

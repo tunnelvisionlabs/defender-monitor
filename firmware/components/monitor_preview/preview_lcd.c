@@ -78,13 +78,13 @@ esp_err_t preview_lcd_init(void)
     if (error == ESP_OK) error = esp_lcd_panel_reset(s_panel);
     if (error == ESP_OK) error = esp_lcd_panel_init(s_panel);
     if (error == ESP_OK) error = esp_lcd_panel_invert_color(s_panel, true);
-    /* The first physical trial had mirrored UI with MV clear. Transpose LCD
-     * axes so the stock camera/ribbon can stay fixed and the complete assembly
-     * can be oriented with the UI upright. Preview sampling compensates the
-     * remaining camera-to-LCD reflection without changing source frames.
+    /* MV corrects the initial UI handedness. Mirror both LCD axes to place USB
+     * below the upright UI, keeping the planned shroud clear of RO buttons.
+     * Preview sampling compensates the fixed camera's remaining reflection;
+     * the short stock ribbon and native source frames stay unchanged.
      */
     if (error == ESP_OK) error = esp_lcd_panel_swap_xy(s_panel, true);
-    if (error == ESP_OK) error = esp_lcd_panel_mirror(s_panel, false, false);
+    if (error == ESP_OK) error = esp_lcd_panel_mirror(s_panel, true, true);
     if (error == ESP_OK) error = esp_lcd_panel_disp_on_off(s_panel, true);
     if (error == ESP_OK) {
         s_ready = true;

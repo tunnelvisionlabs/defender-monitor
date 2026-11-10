@@ -11,18 +11,18 @@ document.
 
 ## Identified assembly
 
-| Item                       | Evidence                                                                                               | Remaining confirmation                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product]     | Exact base-board revision is not visible                                                       |
-| Camera                     | Owner reads `OV3660`; native capture reports PID `0x3660`                                              | Optical quality and useful panel framing remain unverified                                     |
-| Connections                | Stock camera/ribbon retained; owner confirms corrected UI and camera view upright with USB pointing up | Plug and button clearances remain unmeasured                                                   |
-| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                     | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown               |
-| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified             | Meaning of the strip marking is unknown; do not treat it as a PCB revision                     |
-| Power                      | USB-C computer supply; native USB flashing, diagnostics, and camera acquisition observed               | Voltage/current and thermal behavior are unmeasured; standalone supply remains to be selected  |
-| Memory                     | Flash probe confirms 8 MB; SDK detects 8 MB octal PSRAM at 80 MHz and passes its memory test           | See [capture measurements](camera-capture.md) for usable memory; full-system load remains open |
-| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen             | Measurement tool/uncertainty and connector clearances are not recorded                         |
-| Antenna                    | Owner has the supplied antenna; it is not connected                                                    | Establish attachment, routing, and clearance before Wi-Fi trials                               |
-| microSD slots              | Owner confirms both slots are empty                                                                    | Card-interface wiring and pull-ups remain connected                                            |
+| Item                       | Evidence                                                                                                       | Remaining confirmation                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product]             | Exact base-board revision is not visible                                                       |
+| Camera                     | Owner reads `OV3660`; native capture reports PID `0x3660`                                                      | Optical quality and useful panel framing remain unverified                                     |
+| Connections                | Stock camera/ribbon retained; USB-up view verified; requested USB-down revision installed for button clearance | USB-down visual confirmation and detailed plug/button clearances remain open                   |
+| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                             | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown               |
+| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified                     | Meaning of the strip marking is unknown; do not treat it as a PCB revision                     |
+| Power                      | USB-C computer supply; native USB flashing, diagnostics, and camera acquisition observed                       | Voltage/current and thermal behavior are unmeasured; standalone supply remains to be selected  |
+| Memory                     | Flash probe confirms 8 MB; SDK detects 8 MB octal PSRAM at 80 MHz and passes its memory test                   | See [capture measurements](camera-capture.md) for usable memory; full-system load remains open |
+| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen                     | Measurement tool/uncertainty and connector clearances are not recorded                         |
+| Antenna                    | Owner has the supplied antenna; it is not connected                                                            | Establish attachment, routing, and clearance before Wi-Fi trials                               |
+| microSD slots              | Owner confirms both slots are empty                                                                            | Card-interface wiring and pull-ups remain connected                                            |
 
 The SKU alone does not identify a PCB or camera revision. Seeed's [2025 camera
 change notice][camera-change] covers the same SKU, and the current [series
@@ -183,15 +183,17 @@ fits behind the screen's width/height envelope.
 The USB connector points outward toward the screen's edge. During the initial
 preview trial, the owner reported that it pointed toward the displayed `L`
 marker, with mirrored app text and a camera image rotated 90 degrees clockwise.
-That initial UI is not the final board-axis reference. The corrected UI and
-camera image are upright and unmirrored with the **USB connector pointing up**,
-as confirmed by the owner; see [preview evidence](preview-and-optics.md). This
-chosen screen reference does not imply an inherent top of the circular board.
-The owner rotated the whole assembly and retained the stock camera position on
-its very short, semi-flexible connection. Use this verified datum when recording
-the final panel/mount orientation. A compact cable is proposed, but no plug
-projection or minimum clearance has been measured. Select and measure the actual
-cable before CAD relies on it.
+That initial UI is not the final board-axis reference. The owner verified an
+upright, unmirrored USB-up view, then requested **USB down** so the shroud can
+leave all Defender buttons exposed. The USB-down firmware is installed; its
+visible orientation still needs confirmation. See
+[preview evidence](preview-and-optics.md). The circular board has no inherent
+top. Retain the stock camera on its short, semi-flexible connection and rotate
+the complete assembly. The owner proposes 39–42 mm lens-to-panel spacing and
+reports comfortable coverage of all three characters and both LEDs. This target
+is not a fit tolerance or complete optical acceptance. Use the confirmed final
+datum and measured clearances before CAD; the actual compact cable's projection
+and bend space remain unmeasured.
 
 BOOT/RESET reachability on the assembled stack is unknown. The owner has not
 needed those controls during ordinary use; this does not establish that a
@@ -207,7 +209,7 @@ lens, connector, and cable protrusions must be measured before CAD uses them.
 | Evidence needed             | How to record it                                                                                                                                  | Completion boundary                                                                                                                                                                                                            |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Complete stack envelope     | Owner reports 43 by 43 by 28.7 mm using the screen-face datum; record method/uncertainty when fit precision is needed                             | Initial envelope recorded; detailed fit measurements belong to mount design                                                                                                                                                    |
-| Display orientation         | Owner confirms upright, unmirrored UI and camera view with USB pointing up; stock camera position retained                                        | Screen datum recorded in [preview evidence](preview-and-optics.md); final panel/mount orientation and optical envelope still need measurement                                                                                  |
+| Display orientation         | USB-up view verified; USB-down firmware requested/installed to leave buttons uncovered; stock camera retained                                     | USB-down visual confirmation and final panel/mount geometry remain open; see [preview evidence](preview-and-optics.md)                                                                                                         |
 | Cable fit and clearances    | A compact cable is a proposed option; plug projection, bend space, and insertion/removal clearance are unmeasured                                 | [Carrier design](https://github.com/tunnelvisionlabs/defender-monitor/issues/20) selects/measures the cable; [shroud work](https://github.com/tunnelvisionlabs/defender-monitor/issues/21) verifies the installed service path |
 | Recovery access             | BOOT/RESET reachability is unknown; no recovery trial has been performed                                                                          | [Recovery validation](https://github.com/tunnelvisionlabs/defender-monitor/issues/16) establishes the procedure, including any removals; shroud work preserves that access                                                     |
 | Antenna                     | Supplied antenna available but not connected; record its eventual attachment, cable route, and clearance                                          | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                                                                                                                                                               |
