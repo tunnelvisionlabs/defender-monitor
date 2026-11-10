@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "driver/gpio.h"
 #include "esp_camera.h"
 #include "monitor_camera.h"
