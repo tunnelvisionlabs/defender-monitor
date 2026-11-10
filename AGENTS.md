@@ -72,6 +72,10 @@ before changing behavior or tests.
 
 ## Git and writing
 
+- Never close a GitHub issue without explicit user authorization. Completing
+  local work, passing checks, or preparing changes does not authorize closure.
+  If closure depends on a merge into `main`, keep the issue open until that
+  merge occurs.
 - Preserve the existing Git index. Do not stage, commit, amend, reset, unstage,
   or perform equivalent index changes without an explicit request for that
   specific action in the current task. Staging and committing require separate
