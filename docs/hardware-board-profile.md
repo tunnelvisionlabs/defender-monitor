@@ -9,16 +9,18 @@ GPIO configuration, or memory setting is implemented by this document.
 
 ## Identified assembly
 
-| Item                       | Evidence                                                                                           | Remaining confirmation                                                           |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product] | Exact base-board revision is not visible                                         |
-| Camera                     | Owner reads `OV3660` on the supplied camera                                                        | Read the sensor identity during camera bring-up                                  |
-| Connections                | Owner plugged the XIAO into the Round Display; otherwise supplied hardware is unchanged            | Record orientation and service clearances on the actual stack                    |
-| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown |
-| Power                      | USB power is acceptable; a battery is not required                                                 | Select the actual supply/cable and measure the combined load                     |
-| Memory                     | Vendor specification is 8 MB flash and 8 MB PSRAM [product]                                        | Confirm flash capacity, PSRAM operation, and usable memory at bring-up           |
-| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen         | Measurement tool/uncertainty and connector clearances are not recorded           |
-| Antenna                    | Owner reports no external antenna connected                                                        | Establish antenna availability, routing, and clearance before Wi-Fi trials       |
+| Item                       | Evidence                                                                                           | Remaining confirmation                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product] | Exact base-board revision is not visible                                                      |
+| Camera                     | Owner reads `OV3660` on the supplied camera                                                        | Read the sensor identity during camera bring-up                                               |
+| Connections                | Owner plugged the XIAO into the Round Display; otherwise supplied hardware is unchanged            | Record orientation and service clearances on the actual stack                                 |
+| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown              |
+| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified         | Meaning of the strip marking is unknown; do not treat it as a PCB revision                    |
+| Power                      | Currently connected to the development computer with a regular USB-C cable; no battery required    | USB data operation and available power are untested; standalone supply remains to be selected |
+| Memory                     | Vendor specification is 8 MB flash and 8 MB PSRAM [product]                                        | Confirm flash capacity, PSRAM operation, and usable memory at bring-up                        |
+| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen         | Measurement tool/uncertainty and connector clearances are not recorded                        |
+| Antenna                    | Owner has the supplied antenna; it is not connected                                                | Establish attachment, routing, and clearance before Wi-Fi trials                              |
+| microSD slots              | Owner confirms both slots are empty                                                                | Card-interface wiring and pull-ups remain connected                                           |
 
 The SKU alone does not identify a PCB or camera revision. Seeed's [2025 camera
 change notice][camera-change] covers the same SKU, and the current [series
@@ -30,6 +32,10 @@ v1.2, and Round Display v1.0 and v1.1. They are comparison sources, not a claim
 that the supplied boards carry those exact revisions. In particular, the
 expansion v1.2 drawing changes camera supply components; a shared signal map
 does not make the power circuits interchangeable.
+
+The `V5` marking is on an attached strip rather than the PCB silkscreen. Its
+meaning has not been established, so it does not replace the conditional
+v1.1-style circuit identification above.
 
 ## XIAO header allocation
 
@@ -135,9 +141,10 @@ behavior with the pinned SDK during bring-up.
 Both microSD circuits remain physically wired to GPIO7/8/9. The expansion
 schematic's populated R12 selects GPIO21 for Sense card select; the alternative
 D2 connection is unpopulated in that drawing. The display uses GPIO3 for card
-select. Keep attached cards deselected before using the shared SPI bus, and
-confirm whether either slot contains a card. No microSD driver or storage is
-needed for this monitoring baseline.
+select. The owner confirms that both slots are empty; their interface wiring and
+pull-ups remain present. Keep any subsequently inserted cards deselected before
+using the shared SPI bus. No microSD driver or storage is needed for this
+monitoring baseline.
 
 Seeed's [combined camera/display example][camera-guide] discusses doubled SD
 pull-ups and alternatives involving the expansion-board J3/JP3 bridge. Preserve
@@ -147,13 +154,16 @@ coexistence rather than copying an example's board modification.
 
 ## Power, dimensions, and remaining evidence
 
-The baseline is one USB 5 V source through the XIAO USB-C connector, with
-battery inputs unused. It supports operation without a computer. The exact
-adapter, cable, and available routing space still need recording. Do not use
-isolated board idle-current figures as the supply budget for camera, LCD, Wi-Fi,
-and OTA together. The display and base have distinct power circuitry; switch
-behavior must not be assumed to disconnect every powered part of a USB-connected
-stack.
+The current bench arrangement is a regular USB-C cable from the development
+computer to the XIAO. USB data operation and the power available from that
+connection have not been validated. The standalone baseline remains one USB 5 V
+source through the XIAO USB-C connector, with battery inputs unused. Its adapter
+and cable/routing clearances remain to be selected or measured.
+
+Do not use isolated board idle-current figures as the supply budget for camera,
+LCD, Wi-Fi, and OTA together. The display and base have distinct power
+circuitry; switch behavior must not be assumed to disconnect every powered part
+of a USB-connected stack.
 
 The supplied complete assembly measures **43 by 43 by 28.7 mm**, as reported by
 the owner. Width/height are viewed from the screen face; thickness runs from
@@ -171,15 +181,17 @@ lens, connector, and cable protrusions must be measured before CAD uses them.
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | Complete stack envelope     | Owner reports 43 by 43 by 28.7 mm using the screen-face datum; record method/uncertainty when fit precision is needed                             | Initial envelope recorded; detailed fit measurements belong to mount design       |
 | Connectors and access       | USB plug projection/bend space, camera flex clearance, BOOT/RESET access, board orientation, and any header interference                          | Record actual clearances; panel attachment geometry belongs to mount design       |
-| Antenna                     | None connected; establish whether the supplied antenna is available, plus its cable route and required clearance                                  | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                  |
-| Switches and cards          | Preserve the reported KE setting; identify the separate power switch and whether either SD slot contains a card                                   | Match the actual stack to the candidate circuit                                   |
+| Antenna                     | Supplied antenna available but not connected; record its eventual attachment, cable route, and clearance                                          | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                  |
+| Switches and cards          | Both SD slots empty; preserve the reported open KE setting and distinguish it from the separate power switch                                      | Initial card/switch inventory recorded; circuit matching remains conditional      |
 | Runtime identity and memory | Sensor ID, flash capacity, PSRAM initialization, and usable memory with drivers                                                                   | Camera bring-up; unknown values do not require new firmware in this investigation |
 | Power and temperature       | Record supply/cable, ambient conditions, measurement locations, startup/capture/display load, voltage/brownout behavior, current, and temperature | Measured bring-up results first; Wi-Fi/OTA and enclosed full-load trials later    |
 
 Only the owner's assembly-envelope measurement is recorded. No electrical
 measurements, thermal trials, camera captures, or successful boots are claimed.
-Keep this investigation open until the remaining antenna, supply/cable, and
-service-clearance inventory is recorded. The runtime items above belong to their
+Keep this investigation open until the remaining connector-orientation and
+service-clearance inventory is recorded. Antenna availability and the bench
+power connection are now recorded; final antenna routing and standalone supply
+selection remain deployment details. The runtime items above belong to their
 implementation steps and must remain explicitly unverified until tested.
 
 ## Reference revisions
