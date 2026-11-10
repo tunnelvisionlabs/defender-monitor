@@ -17,7 +17,8 @@ Run that command from the repository root. See
 [development](../docs/development.md#firmware-toolchain) for prerequisites and
 generated-file handling and refreshing an existing scaffold configuration.
 `sdkconfig.defaults` selects the candidate 8 MB flash, octal PSRAM, and native
-USB console profile. Physical acceptance remains pending.
+USB console profile. Cold startup and five-minute camera-only capture have
+passed on the supplied assembly; optical and full-system checks remain open.
 
 Add focused native components under `components/` with their first consumers,
 keeping `main/` for composition. Pin external components and retain their

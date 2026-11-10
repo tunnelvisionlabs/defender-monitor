@@ -2,30 +2,33 @@
 
 Investigation for
 [issue #11](https://github.com/tunnelvisionlabs/defender-monitor/issues/11),
-reviewed on 2026-11-09. This is a candidate hardware profile for native ESP-IDF
-bring-up. The owner has identified the camera and measured the assembly
-envelope; supply behavior and runtime identities remain unverified. No driver,
-GPIO configuration, or memory setting is implemented by this document.
+reviewed on 2026-11-09. The owner identified the camera and measured the
+assembly envelope. Subsequent [native capture trials](camera-capture.md)
+confirmed the sensor PID, flash capacity, and PSRAM operation on this assembly.
+Supply measurements, optical quality, and enclosed operation remain unverified.
+No driver, GPIO configuration, or memory setting is implemented by this
+document.
 
 ## Identified assembly
 
-| Item                       | Evidence                                                                                                           | Remaining confirmation                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product]                 | Exact base-board revision is not visible                                                      |
-| Camera                     | Owner reads `OV3660` on the supplied camera                                                                        | Read the sensor identity during camera bring-up                                               |
-| Connections                | Owner reports the USB connector points outward toward the screen's edge; the supplied stack is otherwise unchanged | Screen-relative rotation is undetermined; plug and button clearances remain unmeasured        |
-| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown              |
-| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified                         | Meaning of the strip marking is unknown; do not treat it as a PCB revision                    |
-| Power                      | Currently connected to the development computer with a regular USB-C cable; no battery required                    | USB data operation and available power are untested; standalone supply remains to be selected |
-| Memory                     | Vendor specification is 8 MB flash and 8 MB PSRAM [product]                                                        | Confirm flash capacity, PSRAM operation, and usable memory at bring-up                        |
-| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen                         | Measurement tool/uncertainty and connector clearances are not recorded                        |
-| Antenna                    | Owner has the supplied antenna; it is not connected                                                                | Establish attachment, routing, and clearance before Wi-Fi trials                              |
-| microSD slots              | Owner confirms both slots are empty                                                                                | Card-interface wiring and pull-ups remain connected                                           |
+| Item                       | Evidence                                                                                                           | Remaining confirmation                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| XIAO product               | Owner reports SKU `102010635`; Seeed identifies it as XIAO ESP32-S3 Sense (Pre-Soldered) [product]                 | Exact base-board revision is not visible                                                       |
+| Camera                     | Owner reads `OV3660`; native capture reports PID `0x3660`                                                          | Optical quality and useful panel framing remain unverified                                     |
+| Connections                | Owner reports the USB connector points outward toward the screen's edge; the supplied stack is otherwise unchanged | Screen-relative rotation is undetermined; plug and button clearances remain unmeasured         |
+| Display variant            | Owner identifies a two-section `ON`/`KE` switch, with both sections away from `ON`                                 | This matches the reviewed v1.1-style circuit; exact PCB revision remains unknown               |
+| Display strip marking      | Owner reads `V5` on a strip attached behind the screen; no PCB revision marking identified                         | Meaning of the strip marking is unknown; do not treat it as a PCB revision                     |
+| Power                      | USB-C computer supply; native USB flashing, diagnostics, and camera acquisition observed                           | Voltage/current and thermal behavior are unmeasured; standalone supply remains to be selected  |
+| Memory                     | Flash probe confirms 8 MB; SDK detects 8 MB octal PSRAM at 80 MHz and passes its memory test                       | See [capture measurements](camera-capture.md) for usable memory; full-system load remains open |
+| Complete assembly envelope | Owner measures 43 mm wide, 43 mm high, and 28.7 mm thick; the stack fits behind the screen                         | Measurement tool/uncertainty and connector clearances are not recorded                         |
+| Antenna                    | Owner has the supplied antenna; it is not connected                                                                | Establish attachment, routing, and clearance before Wi-Fi trials                               |
+| microSD slots              | Owner confirms both slots are empty                                                                                | Card-interface wiring and pull-ups remain connected                                            |
 
 The SKU alone does not identify a PCB or camera revision. Seeed's [2025 camera
 change notice][camera-change] covers the same SKU, and the current [series
 guide][series] describes further camera substitutions. Use the owner's OV3660
-marking as the current camera target, with runtime confirmation still required.
+marking as the current camera target; native capture has confirmed PID `0x3660`
+on this assembly.
 
 The schematic references include base-board v1.51, expansion-board v1.0 and
 v1.2, and Round Display v1.0 and v1.1. They are comparison sources, not a claim
@@ -198,19 +201,18 @@ lens, connector, and cable protrusions must be measured before CAD uses them.
 | Recovery access             | BOOT/RESET reachability is unknown; no recovery trial has been performed                                                                          | [Recovery validation](https://github.com/tunnelvisionlabs/defender-monitor/issues/16) establishes the procedure, including any removals; shroud work preserves that access                                                     |
 | Antenna                     | Supplied antenna available but not connected; record its eventual attachment, cable route, and clearance                                          | Wi-Fi/OTA readiness gap; camera/display work can remain USB-only                                                                                                                                                               |
 | Switches and cards          | Both SD slots empty; preserve the reported open KE setting and distinguish it from the separate power switch                                      | Initial card/switch inventory recorded; circuit matching remains conditional                                                                                                                                                   |
-| Runtime identity and memory | Sensor ID, flash capacity, PSRAM initialization, and usable memory with drivers                                                                   | Camera bring-up; unknown values do not require new firmware in this investigation                                                                                                                                              |
+| Runtime identity and memory | PID `0x3660`, 8 MB flash, and 8 MB PSRAM confirmed; usable camera-only memory reported                                                            | [Capture evidence](camera-capture.md) records the native trial; display, networking, and enclosed loads still require measurement                                                                                              |
 | Power and temperature       | Record supply/cable, ambient conditions, measurement locations, startup/capture/display load, voltage/brownout behavior, current, and temperature | Measured bring-up results first; Wi-Fi/OTA and enclosed full-load trials later                                                                                                                                                 |
 
-Only the owner's assembly-envelope measurement is recorded. No electrical
-measurements, thermal trials, camera captures, or successful boots are claimed.
-The board-identification and pin-allocation investigation records the available
-hardware facts and the outstanding checks above. Screen rotation, cable-specific
-fit, and recovery operability belong to their existing implementation and
-validation steps; they do not require further owner measurements before native
-bring-up begins. Antenna routing and standalone supply selection remain
-deployment details. Unknown PCB revisions, runtime identities, clearances, and
-physical behavior remain explicitly unverified until their corresponding checks
-are performed.
+The board-identification investigation recorded the owner's assembly-envelope
+measurement and the available circuit references. Subsequent native firmware has
+booted and acquired frames; its results and remaining acceptance checks are
+recorded separately in [capture evidence](camera-capture.md). No electrical or
+thermal measurements are claimed. Screen rotation, cable-specific fit, and
+recovery operability belong to their existing implementation and validation
+steps. Antenna routing and standalone supply selection remain deployment
+details. Unknown PCB revisions, clearances, and physical behavior remain
+explicitly unverified until their corresponding checks are performed.
 
 ## Reference revisions
 

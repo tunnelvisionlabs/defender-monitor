@@ -1,4 +1,4 @@
-# Candidate XIAO ESP32S3 Sense / ESP32-S3R8 profile; physical acceptance pending.
+# XIAO ESP32S3 Sense / ESP32-S3R8 capture profile; optical/full-load trials remain.
 CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_OCT=y

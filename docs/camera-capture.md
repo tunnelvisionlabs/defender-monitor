@@ -4,10 +4,10 @@ The implemented path is native camera acquisition on the recorded XIAO ESP32S3
 Sense / OV3660 profile. It supplies raw frames and USB diagnostics. Calibration,
 recognition, Round Display preview, Wi-Fi, MQTT, and OTA are separate work.
 
-Firmware compilation and host tests have passed. Cold startup, sustained
-capture, sensor identity, optical quality, usable memory, and actual timing on
-the supplied hardware remain unverified. A successful build is not physical
-acceptance.
+Firmware compilation, 28 host scenarios, cold startup, and a five-minute
+camera-only capture trial have passed on the supplied assembly. The measured
+results below cover acquisition progress and memory, while optical quality,
+display coexistence, and enclosed/full-system operation remain unverified.
 
 ## Implemented contract
 
@@ -94,7 +94,41 @@ frames and interval microseconds, not the nominal pacing delay.
 Raw logs contain runtime session data and belong in ignored `local/` storage.
 Only sanitized results should be published in an issue or report.
 
-## Physical acceptance still required
+## Physical results: 2026-11-09
+
+The supplied USB-powered assembly ran ESP-IDF 5.5.5 with camera driver 2.1.9
+using the targets above. The Round Display remained attached with its reported
+open KE settings; no SD cards, networking, or display driver were used. Flash
+installation passed the tool's write/hash verification. The installed app image
+SHA-256 is `4130d5d8a148ae909a962a938657ea02b8e3fcbaa31f77f6a49ffb75e02bb632`;
+the startup ELF hash prefix is `b9620adfcccd349b`.
+
+| Check           | Observed result                                                                                                                                                                                                                                                                        |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hardware        | ESP32-S3 revision 0.2; flash probe reports 8 MB; SDK detects 8 MB octal PSRAM at 80 MHz and passes its memory test; sensor PID `0x3660`                                                                                                                                                |
+| Sustained trial | 300.094 seconds of host recording after USB restart; 59 progress reports; final report at 298.031 seconds records 1,651 delivered frames and zero acquisition failures                                                                                                                 |
+| Cadence         | 5.553 frames/second between first and last source reports; individual report intervals span 5.313 to 5.553 frames/second, including startup                                                                                                                                            |
+| Source progress | Source timestamps increase in every report; reported source age ranges from 90,058 to 90,070 microseconds                                                                                                                                                                              |
+| Internal heap   | 328,387 bytes free in every progress report; reported minimum since boot is 296,356 bytes                                                                                                                                                                                              |
+| PSRAM           | 8,231,500 bytes free in every progress report                                                                                                                                                                                                                                          |
+| Main task stack | Reported minimum free stack is 4,212 bytes throughout the trial, from the configured 6,144-byte stack                                                                                                                                                                                  |
+| Runtime faults  | One application startup; no logged SDK errors, capture timeouts/overflows, panic, or brownout during the recording                                                                                                                                                                     |
+| Cold startup    | Owner unplugged USB for at least five seconds and reconnected; logger observed disconnection/reconnection and SDK power-on reset reason `1`; PSRAM test and camera initialization pass; 20.032 seconds of recording includes 83 delivered frames and zero failures at the final report |
+
+The cold boot also produced a different boot-session token. Frame totals stop at
+the last periodic report; no endpoint count is extrapolated. Ages and heap
+values are periodic samples. These measurements describe this camera-only run
+with the current USB supply and cable, without a shroud or networking load. They
+do not establish electrical or thermal margins, maximum per-frame latency, or
+long-term stability. Raw logs remain in ignored `local/` storage.
+
+Source pixels were not exported or visually inspected. Focus, RGB byte order,
+panel readability/flicker, and display coexistence remain for preview/optical
+bring-up. No physical camera fault was induced; init/capture failure, stale
+input, and slow-consumer behavior have host SDK-boundary coverage. Voltage,
+current, ambient temperature, and component temperature were not measured.
+
+## Physical acceptance procedure and remaining checks
 
 Use an explicitly authorized target and the exact built images. Routine builds,
 host tests, and CI do not select, reset, flash, or provision hardware.
@@ -113,7 +147,7 @@ host tests, and CI do not select, reset, flash, or provision hardware.
 4. Record acquisition/init failure behavior and gaps separately from the host
    simulations. No camera-disconnection or live-installation manipulation is
    part of automatic checks.
-5. Mark image visibility/segment discernibility and camera/display coexistence
+5. Keep image visibility/segment discernibility and camera/display coexistence
    unverified until preview/optical work exercises them. Keep all unperformed
    checks explicitly open.
 

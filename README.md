@@ -13,8 +13,10 @@ observations. The owner supplies the Defender and Home Assistant installation.
 
 The firmware implements camera-only bring-up for the recorded XIAO ESP32S3 Sense
 / OV3660 profile: bounded frame ownership, source acquisition provenance, and
-local USB startup/progress diagnostics. It has firmware compilation and host
-SDK-boundary coverage; physical capture and image quality are not yet verified.
+local USB startup/progress diagnostics. Firmware compilation, host SDK-boundary
+tests, a five-minute physical capture trial, and cold power-on startup pass on
+the supplied assembly. Image quality and camera/display coexistence remain
+unverified.
 
 Calibration, recognition, display preview and touch behavior, networking, MQTT
 publishing, and mount geometry are not implemented. There is no installable Home
