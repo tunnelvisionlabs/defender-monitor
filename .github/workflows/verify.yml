@@ -66,7 +66,7 @@ jobs:
           PY
 
   firmware:
-    name: ESP32-S3 camera firmware and host tests
+    name: ESP32-S3 camera/preview firmware and host tests
     needs: toolchain
     runs-on: ubuntu-24.04
     container:
@@ -82,7 +82,7 @@ jobs:
         run: |
           . "$IDF_PATH/export.sh"
           idf.py -C firmware build
-      - name: Run camera SDK-boundary tests on the host
+      - name: Run camera and preview boundary tests on the host
         shell: bash
         run: |
           . "$IDF_PATH/export.sh"

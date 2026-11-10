@@ -11,17 +11,18 @@ observations. The owner supplies the Defender and Home Assistant installation.
 
 ## Current status
 
-The firmware implements camera-only bring-up for the recorded XIAO ESP32S3 Sense
-/ OV3660 profile: bounded frame ownership, source acquisition provenance, and
-local USB startup/progress diagnostics. Firmware compilation, host SDK-boundary
-tests, a five-minute physical capture trial, and cold power-on startup pass on
-the supplied assembly. Image quality and camera/display coexistence remain
-unverified.
+The firmware implements camera acquisition and Round Display preview for the
+recorded XIAO ESP32S3 Sense / OV3660 profile, with bounded ownership,
+acquisition provenance, source-age handling, and local USB diagnostics.
+Camera-only cold startup and five-minute camera-only and combined-driver trials
+pass on the supplied assembly. Visible display output, combined cold startup,
+orientation, image quality, and panel optics remain unverified. See
+[preview and optical measurements](docs/preview-and-optics.md).
 
-Calibration, recognition, display preview and touch behavior, networking, MQTT
-publishing, and mount geometry are not implemented. There is no installable Home
-Assistant custom integration. See [camera capture](docs/camera-capture.md) for
-the implemented contract, bring-up targets, and remaining hardware checks.
+Calibration, recognition, touch behavior, networking, MQTT publishing, and mount
+geometry are not implemented. There is no installable Home Assistant custom
+integration. See [camera capture](docs/camera-capture.md) for the implemented
+contract, bring-up targets, and remaining hardware checks.
 
 The initial Home Assistant connection will use MQTT discovery through Home
 Assistant's existing MQTT integration. A broker is an additional deployment

@@ -1,10 +1,11 @@
 # Firmware
 
 This is a direct ESP-IDF project for the ESP32-S3. `main/app_main.c` composes
-the camera-only bring-up loop and local startup/progress reporting. The
+the camera/preview tasks and local startup/progress reporting. The
 `monitor_camera` component initializes the recorded OV3660 wiring and exposes
-bounded, source-timestamped frame leases. No display, touch, Wi-Fi, MQTT,
-private configuration, or calibration is initialized.
+bounded, source-timestamped frame leases. `monitor_preview` copies a fixed-size
+thumbnail before release and independently drives the GC9A01 Round Display. No
+touch, Wi-Fi, MQTT, private configuration, or calibration is initialized.
 
 Use the SDK pin in `../toolchain.json` and an activated official SDK
 environment:
@@ -25,7 +26,9 @@ keeping `main/` for composition. Pin external components and retain their
 dependency lockfile when introduced. The SDK's generated dependencies and build
 products remain ignored.
 
-See [camera capture](../docs/camera-capture.md) for ownership, timing, targets,
-diagnostics, and the physical checklist. This is not deployment firmware.
-Compilation does not establish boot or hardware acceptance and does not
-authorize writing to any device.
+See [camera capture](../docs/camera-capture.md) and
+[preview/optics](../docs/preview-and-optics.md) for ownership, timing, targets,
+diagnostics, and physical checks. A five-minute combined-driver trial passes;
+visible output, combined cold startup, and panel optics remain pending. This is
+not deployment firmware. Compilation does not establish boot or hardware
+acceptance and does not authorize writing to any device.

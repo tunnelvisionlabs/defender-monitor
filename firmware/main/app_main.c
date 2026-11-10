@@ -12,6 +12,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "monitor_camera.h"
+#include "monitor_preview.h"
 
 #if !CONFIG_SPIRAM || !CONFIG_SPIRAM_MODE_OCT || !CONFIG_ESPTOOLPY_FLASHSIZE_8MB || \
     !CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG
@@ -19,6 +20,16 @@
 #endif
 
 static const char *TAG = "monitor";
+static TaskHandle_t s_preview_task;
+
+static void preview_task(void *argument)
+{
+    (void)argument;
+    for (;;) {
+        monitor_preview_step();
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+}
 
 static void report_startup(void)
 {
@@ -55,9 +66,19 @@ void app_main(void)
     ESP_LOGI(TAG, "boot_session=%s sensor_pid=0x%04x camera_status=%s cleanup_status=%s",
              boot_id, status.sensor_pid, esp_err_to_name(init_error),
              esp_err_to_name(status.cleanup_error));
+    const esp_err_t preview_error = monitor_preview_init();
+    bool preview_enabled = preview_error == ESP_OK;
+    if (preview_enabled && xTaskCreate(preview_task, "preview", 6144, NULL, 4,
+                                      &s_preview_task) != pdPASS) {
+        preview_enabled = false;
+        ESP_LOGE(TAG, "preview task allocation failed; capture continues without a screen");
+    }
+    ESP_LOGI(TAG, "preview_status=%s preview_enabled=%d lcd_target=240x240 spi_target_hz=20000000 "
+             "preview_target=192x144 slots=3 lcd_canvas_bytes=115200",
+             esp_err_to_name(preview_error), preview_enabled);
     if (init_error != ESP_OK) {
         ESP_LOGE(TAG, "capture stopped: check the recorded board/camera profile and PSRAM");
-        return;
+        if (preview_enabled) monitor_preview_capture_failed(init_error);
     }
     ESP_LOGI(TAG, "capture_target=%ux%u RGB565 buffers=1 max_frame_age_us=%" PRId64,
              MONITOR_CAMERA_WIDTH, MONITOR_CAMERA_HEIGHT, MONITOR_CAMERA_MAX_AGE_US);
@@ -66,17 +87,27 @@ void app_main(void)
     uint64_t previous_frames = 0;
     for (;;) {
         monitor_camera_frame_t frame = {0};
-        const esp_err_t error = monitor_camera_acquire(&frame);
+        const esp_err_t error = init_error == ESP_OK ? monitor_camera_acquire(&frame) : init_error;
         if (error == ESP_OK) {
-            /* The first consumer records provenance; never logs or stores pixels. */
+            if (preview_enabled) {
+                const esp_err_t submit_error = monitor_preview_submit(&frame);
+                if (submit_error != ESP_OK) {
+                    ESP_LOGW(TAG, "preview submission failed: %s", esp_err_to_name(submit_error));
+                }
+            }
+            /* Preview owns a bounded copy before this SDK lease is returned. */
             const esp_err_t release_error = monitor_camera_release(&frame);
             if (release_error != ESP_OK) {
                 ESP_LOGE(TAG, "capture stopped: buffer release failed: %s",
                          esp_err_to_name(release_error));
+                if (preview_enabled) monitor_preview_capture_failed(release_error);
                 return;
             }
         } else {
-            ESP_LOGW(TAG, "acquisition failed: %s (no fresh frame)", esp_err_to_name(error));
+            if (preview_enabled) monitor_preview_capture_failed(error);
+            if (init_error == ESP_OK) {
+                ESP_LOGW(TAG, "acquisition failed: %s (no fresh frame)", esp_err_to_name(error));
+            }
         }
         const int64_t now_us = esp_timer_get_time();
         if (now_us - previous_report_us >= INT64_C(5000000)) {
@@ -93,9 +124,22 @@ void app_main(void)
                      (unsigned)heap_caps_get_minimum_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT),
                      (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
                      (unsigned)uxTaskGetStackHighWaterMark(NULL));
+            if (preview_enabled) {
+                monitor_preview_status_t preview;
+                monitor_preview_get_status(&preview);
+                ESP_LOGI(TAG, "preview_submitted=%" PRIu64 " replaced=%" PRIu64 " expired=%" PRIu64
+                         " rendered=%" PRIu64 " draw_failures=%" PRIu64 " draw_timeouts=%" PRIu64
+                         " source_us=%" PRId64 " max_submit_us=%" PRId64 " display_ready=%d "
+                         "pending=%d state=%d display_error=%s preview_stack_free_bytes=%u",
+                         preview.submitted, preview.replaced, preview.expired, preview.rendered,
+                         preview.draw_failures, preview.draw_timeouts, preview.last_rendered_capture_us,
+                         preview.max_submit_us, preview.display_ready, preview.transfer_pending,
+                         (int)preview.state, esp_err_to_name(preview.display_error),
+                         (unsigned)uxTaskGetStackHighWaterMark(s_preview_task));
+            }
             previous_report_us = now_us;
             previous_frames = status.frames_delivered;
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(init_error == ESP_OK ? 100 : 1000));
     }
 }

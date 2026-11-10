@@ -56,10 +56,11 @@ SDK's numeric version, and rejects a different CMake target. Build outputs and
 generated `sdkconfig` stay under `firmware/` and are ignored.
 `sdkconfig.defaults` is tracked and selects the candidate XIAO Sense camera
 profile: 8 MB flash, octal PSRAM, and a native USB Serial/JTAG console. The
-camera manifest pins its driver exactly, and `firmware/dependencies.lock` pins
-the resolved component versions and hashes. Keep the lockfile tracked;
-`managed_components/` is generated. The current partition table remains the SDK
-default; OTA layout and distribution belong to their own implementation step.
+camera and preview manifests pin their drivers exactly, and
+`firmware/dependencies.lock` pins the resolved component versions and hashes.
+Keep the lockfile tracked; `managed_components/` is generated. The current
+partition table remains the SDK default; OTA layout and distribution belong to
+their own implementation step.
 
 An existing `firmware/sdkconfig` overrides changed defaults. Refresh an old
 scaffold build using a new ignored configuration/build directory, preserving the

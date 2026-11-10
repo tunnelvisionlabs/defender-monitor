@@ -1,13 +1,16 @@
 # Camera capture bring-up
 
 The implemented path is native camera acquisition on the recorded XIAO ESP32S3
-Sense / OV3660 profile. It supplies raw frames and USB diagnostics. Calibration,
-recognition, Round Display preview, Wi-Fi, MQTT, and OTA are separate work.
+Sense / OV3660 profile. It supplies raw frames and USB diagnostics. The separate
+[Round Display preview](preview-and-optics.md) consumes those frames.
+Calibration, recognition, Wi-Fi, MQTT, and OTA remain separate work.
 
 Firmware compilation, 28 host scenarios, cold startup, and a five-minute
 camera-only capture trial have passed on the supplied assembly. The measured
-results below cover acquisition progress and memory, while optical quality,
-display coexistence, and enclosed/full-system operation remain unverified.
+results below are the camera-only baseline. See
+[preview evidence](preview-and-optics.md) for subsequent combined-driver trials.
+Optical quality and enclosed/full-system operation still require their
+corresponding physical checks.
 
 ## Implemented contract
 

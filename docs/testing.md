@@ -11,9 +11,11 @@ failure without reconstructing private implementation details.
 scaffold configurations need the refresh described in
 [development](development.md). The [host camera suite](../tests/README.md)
 executes production capture code with SDK-boundary fakes and the pinned driver's
-real public headers. CI defines compilation and host execution separately. None
-establishes physical capture, image quality, or recognition accuracy. There is
-no panel corpus, live-device harness, or recognition benchmark yet.
+real public headers. Preview tests execute production scaling, mailbox,
+composition, and freshness behavior against a strict LCD-transfer fake. CI
+defines compilation and host execution separately. None establishes physical
+capture, image quality, or recognition accuracy. There is no panel corpus,
+live-device harness, or recognition benchmark yet.
 
 Documentation-only work needs review and applicable formatting/link checks,
 without tests that assert prose or placeholder file existence. Add test

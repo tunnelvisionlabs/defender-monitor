@@ -6,6 +6,17 @@ PSRAM boundaries. It exercises frame ownership, new unchanged scenes, cached or
 malformed input, initialization failures, timeout, and historical progress. It
 does not emulate the sensor, DMA, real timeouts, or physical image quality.
 
+The preview suite executes production scaling, display composition, fixed-slot
+handoff, freshness, and recovery. Its external fakes provide clock, heap,
+critical-section bookkeeping, and the native LCD transfer boundary. A borrowed
+canvas must remain immutable until a simulated completion; tests deliberately
+delay completion while capture submits newer frames. The suite also covers
+source-byte reuse, frame/session provenance, initial allocation failure,
+initialization delay/retry, stale queued frames, and capture/display errors. It
+does not execute the native LCD/SPI wrapper or real task/interrupt scheduling;
+those require target compilation and physical acceptance. See
+[preview and optics](../docs/preview-and-optics.md).
+
 First configure/build firmware with the pinned SDK so its lockfile resolves the
 managed headers. Then use CMake and a host C11 compiler (GCC or Clang):
 

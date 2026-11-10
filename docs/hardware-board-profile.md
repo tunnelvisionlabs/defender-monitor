@@ -62,9 +62,10 @@ Display v1.1 schematic][round-v11] and [expansion schematic][sense-exp-v12].
 
 The vendor [display implementation][display-reference] selects a 240 by 240
 GC9A01 display, with D1 chip select, D3 data/command, and D6 backlight. This is
-controller/wiring evidence for selecting a native driver later, not an Arduino
-or LVGL dependency for this project. Its example SPI frequency is not a measured
-limit for this assembly.
+controller/wiring evidence for the selected native `esp_lcd_gc9a01` 2.0.4
+driver; Arduino and LVGL are not dependencies. The native implementation and its
+measurements are described in [preview bring-up](preview-and-optics.md). The
+vendor example's SPI frequency is not a measured limit for this assembly.
 
 ### KE switch and reset behavior
 
@@ -158,10 +159,11 @@ coexistence rather than copying an example's board modification.
 ## Power, dimensions, and remaining evidence
 
 The current bench arrangement is a regular USB-C cable from the development
-computer to the XIAO. USB data operation and the power available from that
-connection have not been validated. The standalone baseline remains one USB 5 V
-source through the XIAO USB-C connector, with battery inputs unused. Its adapter
-and cable/routing clearances remain to be selected or measured.
+computer to the XIAO. Native USB flashing, diagnostics, and camera acquisition
+have been observed; electrical supply margin has not been measured. The
+standalone baseline remains one USB 5 V source through the XIAO USB-C connector,
+with battery inputs unused. Its adapter and cable/routing clearances remain to
+be selected or measured.
 
 Do not use isolated board idle-current figures as the supply budget for camera,
 LCD, Wi-Fi, and OTA together. The display and base have distinct power

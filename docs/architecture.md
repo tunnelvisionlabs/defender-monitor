@@ -20,8 +20,10 @@ ESP32: capture -> calibrated interpretation -> observation
 This describes the intended system. Today, `monitor_camera` implements bounded
 raw acquisition and provenance, consumed by the startup/progress loop composed
 in `firmware/main/app_main.c`. The SDK owns one frame buffer; the application
-borrows and releases it explicitly. Interpretation, calibration, display, and
-transport remain unimplemented. See [capture behavior](camera-capture.md).
+borrows and releases it explicitly. `monitor_preview` copies a bounded thumbnail
+before that release; a separate display task owns native LCD operations and its
+DMA canvas. Interpretation, calibration, and transport remain unimplemented. See
+[capture behavior](camera-capture.md) and [preview](preview-and-optics.md).
 
 ## Responsibilities
 
